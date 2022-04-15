@@ -21,28 +21,57 @@ linkRe = re.compile(
 
 class Trie:
     # members: branches(list of Trie), exist(bool)
-    def __init__(self, initData: str) -> None:
-        # There are 96 printable characters in ASCII.
-        # First 32 ASCII characters are non-printable.
-        i = ord(str[0]) - 32
-        # index check
-        if i < 0 or 95 < i:
-            raise IndexError("\'{}\' is outside of the proper range!!!")
-        
+    # __init__() uses recursion
+    def __init__(self, initData: str, empty: bool=False) -> None:
         self.branches = [None] * 96
+        if empty:
+            self.exist = False
+            return
+
         if initData == "":
             self.exist = True
         else:
-            self.exist = False
-            self.branches[i] = Trie(str[1:])
-    
-    # To be completed...
-    def add(self, data: str) -> None:
-        pass
+            # There are 96 printable characters in ASCII.
+            # First 32 ASCII characters are non-printable.
+            i = ord(initData[0]) - 32
+            # index check
+            if i < 0 or 95 < i:
+                raise IndexError("\'{}\' is outside of the proper range!!!".format(initData[0]))
 
-    # To be completed...
+            self.exist = False
+            self.branches[i] = Trie(initData[1:])
+
+    def add(self, data: str) -> None:
+        node = self
+        # loop through the data, run down the tree
+        for c in data:
+            i = ord(c) - 32
+            # index check
+            if i < 0 or 95 < i:
+                raise IndexError("\'{}\' is outside of the proper range!!!".format(c))
+            # add a new node if the next branch doesn't exist
+            if node.branches[i] == None:
+                node.branches[i] = Trie("", empty=True)
+            # move to the next branch
+            node = node.branches[i]
+        
+        node.exist = True
+
     def has(self, data: str) -> bool:
-        return True
+        node = self
+        # loop through the data, run down the tree
+        for c in data:
+            i = ord(c) - 32
+            # index check
+            if i < 0 or 95 < i:
+                raise IndexError("\'{}\' is outside of the proper range!!!".format(c))
+            # check if the next branch exists
+            if node.branches[i] == None:
+                return False
+            # move to the next branch
+            node = node.branches[i]
+
+        return node.exist
 
 try:
     # urls = list of (url, previous url index) tuples
