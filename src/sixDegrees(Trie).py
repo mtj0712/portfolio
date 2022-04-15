@@ -40,8 +40,8 @@ class Trie:
 
             self.exist = False
             self.branches[i] = Trie(initData[1:])
-
-    def add(self, data: str) -> None:
+    
+    def giveNode(self, data: str):
         node = self
         # loop through the data, run down the tree
         for c in data:
@@ -54,8 +54,11 @@ class Trie:
                 node.branches[i] = Trie("", empty=True)
             # move to the next branch
             node = node.branches[i]
-        
-        node.exist = True
+
+        return node
+
+    def add(self, data: str) -> None:
+        self.giveNode(data).exist = True
 
     def has(self, data: str) -> bool:
         node = self
@@ -94,8 +97,9 @@ try:
             # remove the id part from the url
             url = link.attrs["href"].split("#", maxsplit=1)[0]
             # add this url to the list if it's new
-            if not checkedUrls.has(url):
-                checkedUrls.add(url)
+            trieNode = checkedUrls.giveNode(url)
+            if not trieNode.exist:
+                trieNode.exist = True
                 urls.append((url, i))
                 # if the end page is reached, end
                 if url == endUrl:
