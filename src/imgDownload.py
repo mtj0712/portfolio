@@ -4,18 +4,12 @@
 import urllib.request as ur
 from urllib.error import HTTPError
 from bs4 import BeautifulSoup
-import re
 import time
 import os
 
-baseURL = "https://www.w3schools.com"
-downloadDir = "imgDownload_download"
-html = ur.urlopen(baseURL)
-bsObj = BeautifulSoup(html, "html.parser")
-imageTags = bsObj.findAll("img", src=True)
+beginTime = time.time()
 
-def getAbsoluteURL(src: str) -> str:
-    global baseURL
+def getAbsoluteURL(baseURL: str, src: str) -> str:
     if src.startswith("http://") or src.startswith("https://"):
         result = src
     elif src.startswith("www."):
@@ -29,16 +23,30 @@ def getAbsoluteURL(src: str) -> str:
         return None
     return result
 
-def getDownloadPath(absoluteURL):
-    global baseURL
+def getDownloadPath(baseURL: str, absoluteURL: str, downloadDir: str) -> str:
     path = absoluteURL.replace(baseURL, downloadDir)
     dir = os.path.dirname(path)
     if not os.path.exists(dir):
         os.makedirs(dir)
     return path
 
+baseURL = "https://www.w3schools.com"
+downloadDir = "imgDownload_download"
+
+try:
+    html = ur.urlopen(baseURL)
+    bsObj = BeautifulSoup(html, "html.parser")
+    imageTags = bsObj.findAll("img", src=True)
+except HTTPError as e:
+    print(e)
+except:
+    print("Unexpected error!!!")
+
 for tag in imageTags:
-    absoluteURL = getAbsoluteURL(tag["src"])
+    absoluteURL = getAbsoluteURL(baseURL, tag["src"])
     if absoluteURL != None:
-        downloadPath = getDownloadPath(absoluteURL)
+        downloadPath = getDownloadPath(baseURL, absoluteURL, downloadDir)
         ur.urlretrieve(absoluteURL, downloadPath)
+
+endTime = time.time()
+print("Total time it took: {}s".format(endTime - beginTime))
