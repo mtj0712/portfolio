@@ -4,8 +4,6 @@
 
 # This version uses trie data structure for the set of checked urls.
 
-from logging import raiseExceptions
-from turtle import st
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from bs4 import BeautifulSoup
