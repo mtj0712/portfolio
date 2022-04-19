@@ -7,15 +7,22 @@ import time
 
 beginTime = time.time()
 
-# ASCII text
-asciiPage = urlopen("https://www.pythonscraping.com/pages/warandpeace/chapter1.txt")
-asciiText = str(asciiPage.read()).replace("\\n", "\n").replace("\\\'", "\'")
-print(asciiText)
+try:
+    # ASCII text
+    asciiPage = urlopen("https://www.pythonscraping.com/pages/warandpeace/chapter1.txt")
+    asciiText = str(asciiPage.read()).replace("\\n", "\n").replace("\\\'", "\'")
+    print(asciiText)
 
-# UTF-8 text
-utf8Page = urlopen("https://www.pythonscraping.com/pages/warandpeace/chapter1-ru.txt")
-utf8Text = str(utf8Page.read(), "utf-8")
-print(utf8Text)
+    # UTF-8 text
+    utf8Page = urlopen("https://www.pythonscraping.com/pages/warandpeace/chapter1-ru.txt")
+    utf8Text = str(utf8Page.read(), "utf-8")
+    print(utf8Text)
+except HTTPError as e:
+    print(e)
+except Exception as e:
+    print(e)
+except:
+    print("Unexpected error!!!")
 
 endTime = time.time()
 print("Total time it took: {}s".format(endTime - beginTime))
