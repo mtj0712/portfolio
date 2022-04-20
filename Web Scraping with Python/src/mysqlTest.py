@@ -8,9 +8,10 @@ from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 import pymysql
 import re
+from getpass import getpass
 import time
 
-mysqlPwd = input("Database password: ")
+mysqlPwd = getpass("Database password: ")
 
 beginTime = time.time()
 
